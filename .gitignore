@@ -26,3 +26,14 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+<<<<<<< HEAD
+=======
+
+#Mac
+.D[S|s]_Data
+
+#locals
+samples
+unzipped
+*.zip
+>>>>>>> first try

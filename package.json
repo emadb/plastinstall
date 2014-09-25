@@ -1,0 +1,16 @@
+{
+  "name": "PlasticInstaller",
+  "version": "0.0.1",
+  "description": "A useful server for installing apps",
+  "main": "index.js",
+  "dependencies": {
+    "busboy": "~0.2.9",
+    "adm-zip": "~0.4.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": ""
+  },
+  "author": "Emanuele DelBono",
+  "license": "ISC"
+}
