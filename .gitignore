@@ -26,8 +26,6 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
-<<<<<<< HEAD
-=======
 
 #Mac
 .D[S|s]_Data
@@ -36,4 +34,3 @@ node_modules
 samples
 unzipped
 *.zip
->>>>>>> first try
