@@ -1,30 +1,33 @@
 var http = require('http'),
     path = require('path'),
     fs = require('fs'),
+    formidable = require('formidable'),
+    util = require('util'),
     os = require('os');
 
 var AdmZip = require('adm-zip');
 var exec = require('child_process').exec;
-var Busboy = require('busboy');
+
+process.env.TMPDIR = '/temp';
+
 var saveTo;
 var workingFolder = './unzipped';
 
 http.createServer(function(req, res) {
   if (req.method === 'POST') {
-    var busboy = new Busboy({ headers: req.headers });
-    
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      saveTo = path.join(__dirname, path.basename(filename));
-      var fstream = fs.createWriteStream(saveTo);
-      file.pipe(fstream);
-      fstream.on('close', function () {
-        console.log('stream closed');
-      });
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.write(util.inspect({fields: fields, files: files}));
     });
-    
-    busboy.on('finish', function() {
-      console.log('upload finished');
-      var zip = new AdmZip(saveTo);
+
+    form.on('end', function() {
+      var tempPath = this.openedFiles[0].path;
+      var fileName = this.openedFiles[0].name;
+      fs.rename(tempPath, fileName);
+
+      var zip = new AdmZip(fileName);
       zip.extractAllTo(workingFolder, true);
 
       var spec = require(workingFolder + '/spec.json');
@@ -42,7 +45,7 @@ http.createServer(function(req, res) {
             res.write(error.toString());
             res.write(stderr.toString());
             res.end();
-              console.log("ERROR",error )
+            console.log("ERROR",error )
             return;
           }
           res.writeHead(200, {'Content-Type': 'text/plain'});
@@ -50,9 +53,13 @@ http.createServer(function(req, res) {
           res.end(stdout.toString());
         });
       });
-        
+
+
+      res.end('end');
     });
-    return req.pipe(busboy);
+
+    return;
+    
 
   } else if (req.method === 'GET') {
     res.writeHead(200, { Connection: 'close' });
