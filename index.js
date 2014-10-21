@@ -13,14 +13,19 @@ http.createServer(function(req, res) {
   if (req.method === 'POST') {
     var busboy = new Busboy({ headers: req.headers });
     
-//    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-//      saveTo = path.join(__dirname, path.basename(filename));
-//      file.pipe(fs.createWriteStream(saveTo));
-//    });
+    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+      saveTo = path.join(__dirname, path.basename(filename));
+      var fstream = fs.createWriteStream(saveTo);
+      file.pipe(fstream);
+      fstream.on('close', function () {
+        console.log('stream closed');
+      });
+    });
     
     busboy.on('finish', function() {
-      //var zip = new AdmZip(saveTo);
-      //zip.extractAllTo(workingFolder, true);
+      console.log('upload finished');
+      var zip = new AdmZip(saveTo);
+      zip.extractAllTo(workingFolder, true);
 
       var spec = require(workingFolder + '/spec.json');
         
@@ -34,14 +39,15 @@ http.createServer(function(req, res) {
           if (error){
             res.writeHead(500, {'Content-Type': 'text/plain'});
             res.write('ERRORS');
-            res.write(error);
-            res.write(stderr);
+            res.write(error.toString());
+            res.write(stderr.toString());
             res.end();
+              console.log("ERROR",error )
             return;
           }
           res.writeHead(200, {'Content-Type': 'text/plain'});
           res.write('completed');
-          res.end(stdout);
+          res.end(stdout.toString());
         });
       });
         
