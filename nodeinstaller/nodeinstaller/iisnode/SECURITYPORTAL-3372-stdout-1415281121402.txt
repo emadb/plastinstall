@@ -1,0 +1,36 @@
+Listening for requests on port 9003
+executing:  .\migrator\Velocar.VSP.DatabaseMigrator.exe
+executing:  net stop vsp
+executing:  xcopy /S /Y /EXCLUDE:Velocar.VSP.Service.exe.config *.* C:\VSP\VspService\
+executing:  net start vsp
+ERROR { [Error: Command failed: Il servizio non risponde alle funzioni di controllo.
+
+Ulteriori informazioni sono disponibili digitando NET HELPMSG 2186.
+
+] killed: false, code: 2, signal: null }
+executing:  net start vsp
+executing:  .\migrator\Velocar.VSP.DatabaseMigrator.exe
+executing:  net stop vsp
+executing:  xcopy /S /Y /EXCLUDE:Velocar.VSP.Service.exe.config *.* C:\VSP\VspService\
+executing:  net start vsp
+ERROR { [Error: Command failed: Il servizio non risponde alle funzioni di controllo.
+
+Ulteriori informazioni sono disponibili digitando NET HELPMSG 2186.
+
+] killed: false, code: 2, signal: null }
+executing:  net start vsp
+executing:  .\migrator\Velocar.VSP.DatabaseMigrator.exe
+executing:  net stop vsp
+ERROR { [Error: Command failed: Servizio Velocar Security Portal non avviato.
+
+Ulteriori informazioni sono disponibili digitando NET HELPMSG 3521.
+
+] killed: false, code: 2, signal: null }
+executing:  xcopy /S /Y /EXCLUDE:Velocar.VSP.Service.exe.config *.* C:\VSP\VspService\
+executing:  net start vsp
+executing:  net start vsp
+ERROR { [Error: Command failed: Servizio richiesto gi� avviato.
+
+Ulteriori informazioni sono disponibili digitando NET HELPMSG 2182.
+
+] killed: false, code: 2, signal: null }

@@ -3,6 +3,7 @@ var http = require('http'),
     fs = require('fs'),
     formidable = require('formidable'),
     util = require('util'),
+    async = require('async'),
     os = require('os');
 
 var AdmZip = require('adm-zip');
@@ -53,6 +54,7 @@ http.createServer(function(req, res) {
             acallback();
             return;
           }
+          
           res.write(stdout||'.');
           acallback();
           });
