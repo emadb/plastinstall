@@ -1,10 +1,9 @@
 {
   "name": "PlasticInstaller",
-  "version": "0.0.1",
-  "description": "A useful server for installing apps",
+  "version": "1.0.0",
+  "description": "A useful server for installing apps on windows servers",
   "main": "index.js",
   "dependencies": {
-    "busboy": "~0.2.9",
     "adm-zip": "~0.4.4",
     "async": "~0.9.0",
     "formidable": "~1.0.15"

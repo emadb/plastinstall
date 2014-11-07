@@ -1,15 +1,13 @@
 var http = require('http'),
-    path = require('path'),
     fs = require('fs'),
     formidable = require('formidable'),
     util = require('util'),
-    os = require('os');
+    async = require('async'),
+    AdmZip = require('adm-zip'),
+    exec = require('child_process').exec;
 
-var AdmZip = require('adm-zip');
-var exec = require('child_process').exec;
 
-
-process.env.TMPDIR = '/vsp/temp';
+process.env.TMPDIR ||= '/vsp/temp';
 
 var saveTo;
 var workingFolder = './unzipped';
