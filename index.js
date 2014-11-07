@@ -8,8 +8,6 @@ var http = require('http'),
 
 
 process.env.TMPDIR ||= '/vsp/temp';
-
-var saveTo;
 var workingFolder = './unzipped';
 
 http.createServer(function(req, res) {
@@ -40,14 +38,12 @@ http.createServer(function(req, res) {
           
       var cmds = spec.commands.map(function(cmd){
         return function(acallback){
-          console.log('executing: ', cmd);
           exec(cmd, {cwd: workingFolder}, function callback(error, stdout, stderr){
           if (error){
             res.write('ERRORS');
             res.write(error.toString());
             res.write(stderr.toString());
             res.end();
-            console.log("ERROR",error )
             acallback();
             return;
           }
@@ -73,5 +69,5 @@ http.createServer(function(req, res) {
   res.writeHead(404);
   res.end();
 }).listen(process.env.PORT, function() {
-  console.log('Listening for requests on port 9003');
+  console.log('Listening...');
 });
