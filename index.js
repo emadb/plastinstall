@@ -8,7 +8,8 @@ var http = require('http'),
 var AdmZip = require('adm-zip');
 var exec = require('child_process').exec;
 
-process.env.TMPDIR = '/temp';
+
+process.env.TMPDIR = '/vsp/temp';
 
 var saveTo;
 var workingFolder = './unzipped';
@@ -25,7 +26,7 @@ http.createServer(function(req, res) {
     form.on('end', function() {
       var tempPath = this.openedFiles[0].path;
       var fileName = this.openedFiles[0].name;
-      fs.rename(tempPath, fileName);
+      fs.renameSync(tempPath, fileName);
 
       var zip = new AdmZip(fileName);
       zip.extractAllTo(workingFolder, true);
@@ -36,26 +37,32 @@ http.createServer(function(req, res) {
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end('nothing to do');
       }
+        
+      res.writeHead(200, {'Content-Type': 'text/plain'});
           
-      spec.commands.forEach(function(cmd){
-         exec(cmd, {cwd: workingFolder}, function callback(error, stdout, stderr){
+      var cmds = spec.commands.map(function(cmd){
+        return function(acallback){
+          console.log('executing: ', cmd);
+          exec(cmd, {cwd: workingFolder}, function callback(error, stdout, stderr){
           if (error){
-            res.writeHead(500, {'Content-Type': 'text/plain'});
             res.write('ERRORS');
             res.write(error.toString());
             res.write(stderr.toString());
             res.end();
             console.log("ERROR",error )
+            acallback();
             return;
           }
-          res.writeHead(200, {'Content-Type': 'text/plain'});
-          res.write('completed');
-          res.end(stdout.toString());
-        });
+          res.write(stdout||'.');
+          acallback();
+          });
+       }
       });
 
+      async.series(cmds, function(){
+        res.end('\nCompleted');
+      });
 
-      res.end('end');
     });
 
     return;
@@ -67,6 +74,6 @@ http.createServer(function(req, res) {
   }
   res.writeHead(404);
   res.end();
-}).listen(9003, function() {
+}).listen(process.env.PORT, function() {
   console.log('Listening for requests on port 9003');
 });
