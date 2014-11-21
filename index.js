@@ -54,18 +54,18 @@ http.createServer(function(req, res) {
       var cmds = spec.commands.map(function(cmd){
         return function(acallback){
           winston.info('execute command: %s', cmd);
-          exec(cmd, {cwd: workingFolder}, function callback(error, stdout, stderr){
-          if (error){
-            winston.error('command: %s %s %s', cmd, error, stderr);
-            res.write('ERRORS');
-            res.write(error.toString());
-            res.write(stderr.toString());
-            res.end();
+            exec(cmd, {cwd: workingFolder}, function callback(error, stdout, stderr){
+            if (error){
+              winston.error('command: %s %s %s', cmd, error, stderr);
+              res.write('ERRORS');
+              res.write(error.toString());
+              res.write(stderr.toString());
+              res.end();
+              acallback();
+              return;
+            }
+            res.write(stdout || '.');
             acallback();
-            return;
-          }
-          res.write(stdout || '.');
-          acallback();
           });
        }
       });
